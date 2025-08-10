@@ -1,0 +1,4 @@
+Name: Supriya Dutta
+UID: 23BCS13291
+
+ADBMS ASSIGNMENTS
