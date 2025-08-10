@@ -41,7 +41,7 @@ CREATE TABLE Departments (
     DeptName VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Courses (
+CREATE TABLE Course (
     CourseID INT PRIMARY KEY,
     CourseName VARCHAR(100) NOT NULL,
     DeptID INT,
@@ -55,7 +55,7 @@ INSERT INTO Departments (DeptID, DeptName) VALUES
 (4, 'Mathematics'),
 (5, 'Physics');
 
-INSERT INTO Courses (CourseID, CourseName, DeptID) VALUES
+INSERT INTO Course (CourseID, CourseName, DeptID) VALUES
 (101, 'Data Structures', 1),
 (102, 'Algorithms', 1),
 (103, 'Operating Systems', 1),
@@ -72,9 +72,11 @@ SELECT DeptName
 FROM Departments
 WHERE DeptID IN (
     SELECT DeptID
-    FROM Courses
+    FROM Course
     GROUP BY DeptID
     HAVING COUNT(*) > 2
 );
+
+
 
 
