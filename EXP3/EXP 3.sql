@@ -1,3 +1,4 @@
+--EXP 3(Easy level)
 
 CREATE TABLE Employee(
 	EMP_ID INT
@@ -22,61 +23,94 @@ where EMP_ID IN
 	having count(*)=1
 )
 
---Q2
-CREATE TABLE TBL_PRODUCTS
-(
-	ID INT PRIMARY KEY IDENTITY,
-	[NAME] NVARCHAR(50),
-	[DESCRIPTION] NVARCHAR(250) 
-)
-
-CREATE TABLE TBL_PRODUCTSALES
-(
-	ID INT PRIMARY KEY IDENTITY,
-	PRODUCTID INT FOREIGN KEY REFERENCES TBL_PRODUCTS(ID),
-	UNITPRICE INT,
-	QUALTITYSOLD INT
-)
-
-INSERT INTO TBL_PRODUCTS VALUES ('TV','52 INCH BLACK COLOR LCD TV')
-INSERT INTO TBL_PRODUCTS VALUES ('LAPTOP','VERY THIIN BLACK COLOR ACER LAPTOP')
-INSERT INTO TBL_PRODUCTS VALUES ('DESKTOP','HP HIGH PERFORMANCE DESKTOP')
-
-
-INSERT INTO TBL_PRODUCTSALES VALUES (3,450,5)
-INSERT INTO TBL_PRODUCTSALES VALUES (2,250,7)
-INSERT INTO TBL_PRODUCTSALES VALUES (3,450,4)
-INSERT INTO TBL_PRODUCTSALES VALUES (3,450,9)
-
-
-SELECT *FROM TBL_PRODUCTS
-SELECT *FROM TBL_PRODUCTSALES
-
---Task : Find the id , name , description of product which has not been sold for once
---output: id, name, description
-
-SELECT p.ID, p.NAME, p.DESCRIPTION
-FROM TBL_PRODUCTS p
-WHERE p.ID NOT IN (
-    SELECT PRODUCTID
-    FROM TBL_PRODUCTSALES
+-- EXP3 (medium level)
+CREATE TABLE department (
+    id INT PRIMARY KEY,
+    dept_name VARCHAR(50)
 );
 
---Task 2: Find the total quantity sold for w=each respective products
---output: name Qty_Sold(SUM)
---You will use subquery in select clause
+-- Create Employee Table
+CREATE TABLE employeee (
+    id INT,
+    name VARCHAR(50),
+    salary INT,
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES department(id)
+);
 
-SELECT 
-    p.NAME,
-    (
-        SELECT SUM(s.QUALTITYSOLD)
-        FROM 
-		TBL_PRODUCTSALES s
-        WHERE 
-		s.PRODUCTID = p.ID
-    ) AS QTY_SOLD
-FROM TBL_PRODUCTS p;
+-- Insert into Department Table
+INSERT INTO department (id, dept_name) VALUES
+(1, 'IT'),
+(2, 'SALES');
+
+-- Insert into Employee Table
+INSERT INTO employeee (id, name, salary, department_id) VALUES
+(1, 'JOE', 70000, 1),
+(2, 'JIM', 90000, 1),
+(3, 'HENRY', 80000, 2),
+(4, 'SAM', 60000, 2),
+(5, 'MAX', 90000, 1);
+
+--max salary dept wise
+
+--approach 1:
+SELECT d.dept_name, e.name, e.salary
+FROM employeee e
+JOIN 
+department d 
+ON 
+e.department_id = d.id
+WHERE e.salary = (
+    SELECT MAX(salary)
+    FROM employeee
+    WHERE department_id = e.department_id
+);
+
+--approach 2
+SELECT d.dept_name, e.name, e.salary, d.id
+FROM employeee as e
+inner JOIN 
+department as d 
+ON 
+e.department_id = d.id
+WHERE e.salary in (
+    SELECT MAX(E2.salary)
+    FROM Employeee as E2
+    group by E2.department_id
+);
 
 
 
+--q2(hard level)
 
+create table TableA(
+    Emp_id int,
+    Ename varchar(50),
+    salary int
+)
+create table TableB(
+    Emp_id int,
+    Ename varchar(50),
+    salary int
+)
+
+INSERT into TableA(Emp_id, Ename, salary) values
+(1, 'AA', 1000),
+(2, 'BB', 300);
+
+INSERT into TableB(Emp_id, Ename, salary) values
+(2, 'BB', 400),
+(3, 'CC', 100);
+
+--return each empid with their lowest salary and corrsponding ename
+
+select Emp_id ,Ename, min(salary) as min_salary
+from
+(
+    select emp_id, ename, salary from TableA
+    union all
+    select emp_id, ename, salary from TableB
+) 
+TableA
+group by
+Emp_id, Ename;
