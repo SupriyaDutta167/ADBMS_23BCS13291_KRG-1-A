@@ -1,4 +1,5 @@
---EXP 3(Easy level)
+--EXP 3
+--Q1 (Easy level)
 
 CREATE TABLE Employee(
 	EMP_ID INT
@@ -23,7 +24,7 @@ where EMP_ID IN
 	having count(*)=1
 )
 
--- EXP3 (medium level)
+--Q2 (medium level)
 CREATE TABLE department (
     id INT PRIMARY KEY,
     dept_name VARCHAR(50)
@@ -81,7 +82,7 @@ WHERE e.salary in (
 
 
 
---q2(hard level)
+--q3(hard level)
 
 create table TableA(
     Emp_id int,
